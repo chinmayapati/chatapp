@@ -1,5 +1,5 @@
 const net = require("net");
-const { handleInput, log, info } = require("./utils");
+const { handleInput, log, info } = require("./cli-tools");
 
 const client = new net.Socket();
 
