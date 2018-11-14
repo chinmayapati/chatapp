@@ -1,5 +1,5 @@
 const net = require("net");
-const { handleInput, log, info } = require("./cli-tools");
+const { handleInput, log, info, clearConsole } = require("./cli-tools");
 
 const client = new net.Socket();
 
@@ -30,5 +30,6 @@ client.connect(8000, "localhost", () => {
 
 /** Application Logic */
 function send(msg) {
+    if(msg.toLowerCase() == "$clear") return clearConsole();
     client.write(msg);
 }

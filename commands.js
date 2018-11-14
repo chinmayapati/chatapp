@@ -1,4 +1,5 @@
 const { send } = require("./communication");
+const { clearConsole } = require("./cli-tools");
 
 // Change `name` in `pool` : not in `socket`
 function addName(sock, name) {
@@ -41,7 +42,10 @@ function serverExec(cmd) {
     switch (parsed[0]) {
         case "kick":
             kickUser(parsed[1], parsed[2]);
-            break;
+			break;
+		case "clear":
+			clearConsole();
+			break;
         default:
             log(`[exec] server -- ${cmd}`);
     }

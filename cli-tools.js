@@ -34,6 +34,12 @@ exports.handleInput = (handle, name) => {
     });
 }
 
+exports.clearConsole = () => {
+    readline.cursorTo(process.stdout, 0, 0);
+    readline.clearScreenDown(process.stdout);
+    process.stdout.write("> ");
+}
+
 exports.closeHandle = () => {
     rl.close();
 }
