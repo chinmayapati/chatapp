@@ -1,26 +1,34 @@
 const net = require("net");
-const log = a => console.log(a);
+const { handleInput, log, info } = require("./utils");
 
 const client = new net.Socket();
 
 client.on("error", e => {
-    log(`ConnectError: ${e.message}`);
+    info(`ConnectError: ${e.message}`);
+    process.exit(1);
 });
 
 client.connect(8000, "localhost", () => {
-    log(`Connected to server.`);
+    info(`Connected to server.`);
+    handleInput(send);
 
     client.setDefaultEncoding("utf-8");
     client.on("data", d => {
         d = d.toString();
-        log(`Server says, ${d}`);
+        log(`[server]: ${d}`);
     });
 
-    client.on("close", () => log("Connection closed to server."));
-    client.on("end", () => log("Connection dropped to server."));
+    client.on("close", () => { info("Connection closed to server."); process.exit(0); });
+    client.on("end", () => { info("Connection dropped to server."); process.exit(0); });
     client.on("error", e => {
         log(`SocketError: ${e.message}`);
         client.destroy();
+        process.exit(1);
     });
 
 });
+
+/** Application Logic */
+function send(msg) {
+    client.write(msg);
+}
