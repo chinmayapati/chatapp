@@ -1,8 +1,9 @@
-const { handleInput, log, info } = require("./utils");
+const { handleInput, log, info } = require("./cli-tools");
+const { inputHandler, dataHandler } = require("./handlers");
 const net = require("net");
 
 const server = net.createServer();
-let pool = {};
+global.pool = {};
 
 server.on("connection", socket => {
     socket.name = `${socket.remoteAddress}:${socket.remotePort}`;
@@ -39,48 +40,3 @@ server.listen(8000, () => {
     info(`Server listening on 8000`);
     handleInput(inputHandler, "you");
 });
-
-/** Handlers */
-function inputHandler(inp) {
-    broadcast(`${inp}`);
-}
-
-function dataHandler(sock, data) {
-    if (data[0] == "$") exec(sock, data);
-    else log(`[${sock}] : ${data}`);
-}
-
-/** Application Logic */
-function broadcast(msg) {
-    for (let i in pool) {
-        (pool[i].writable && pool[i].write(`${msg}`))
-    }
-}
-
-function send(to, msg) {
-    if (pool[to] && pool[to].writable) {
-        pool[to].write(msg);
-    }
-}
-
-// Change `name` in `pool` : not in `socket`
-function addName(sock, name) {
-    if(!name) return send(sock, `Invalid name`);
-    else if(pool[name]) return send(sock, `Username exists`);
-
-    pool[sock].name = name;
-    pool[name] = pool[sock];
-    delete pool[sock];
-    log(`[${sock}] changed name to '${name}'`);
-}
-
-function exec(sock, cmd) {
-    let parsed = cmd.substr(1).toLowerCase().split(' ');
-    switch (parsed[0]) {
-        case "change":
-            addName(sock, parsed[1]);
-            break;
-        default:
-            log(`[exec] ${sock} -- ${cmd}`);
-    }
-}
