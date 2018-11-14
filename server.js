@@ -6,9 +6,10 @@ let pool = {};
 
 server.on("connection", socket => {
     socket.name = `${socket.remoteAddress}:${socket.remotePort}`;
-    log(`Connection ${socket.name}`);
+    log(`Incoming connection ${socket.name}`);
     pool[socket.name] = socket;
 
+    socket.write(`Hello ${socket.name}`);
     socket.setDefaultEncoding("utf-8");
     socket.on("data", d => {
         d = d.toString();
@@ -24,6 +25,14 @@ server.on("connection", socket => {
         log(`Connection closed ${socket.name}`);
         delete pool[socket.name];
     });
+    socket.on("error", e => {
+        log(`SocketError [${socket.name}] : ${e.message}`);
+        socket.destroy();
+    })
+});
+
+server.on("error", e => {
+    log(`ServerError: ${e.message}`);
 });
 
 server.listen(8000, () => log(`Server listening on 8000`));
