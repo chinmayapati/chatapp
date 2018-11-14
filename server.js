@@ -1,23 +1,23 @@
+const { handleInput, log, info } = require("./utils");
 const net = require("net");
-const log = a => console.log(a);
 
 const server = net.createServer();
 let pool = {};
 
 server.on("connection", socket => {
     socket.name = `${socket.remoteAddress}:${socket.remotePort}`;
-    log(`Incoming connection ${socket.name}`);
+    log(`[info] Incoming connection ${socket.name}`);
     pool[socket.name] = socket;
 
     socket.write(`Hello ${socket.name}`);
     socket.setDefaultEncoding("utf-8");
     socket.on("data", d => {
         d = d.toString();
-        if(d.charCodeAt(0) == 4 ||d.charCodeAt(0) == 65533) return socket.destroy(); // ctrl+c or ctrl+d
+        if (d.charCodeAt(0) == 4 || d.charCodeAt(0) == 65533) return socket.destroy(); // ctrl+c or ctrl+d
 
-        log(`${socket.name} : ${d}`);
+        log(`[${socket.name}] : ${d}`);
     });
-    socket.on("end", ()=>{
+    socket.on("end", () => {
         log(`Connection dropped ${socket.name}`);
         delete pool[socket.name];
     });
@@ -35,4 +35,18 @@ server.on("error", e => {
     log(`ServerError: ${e.message}`);
 });
 
-server.listen(8000, () => log(`Server listening on 8000`));
+server.listen(8000, () => {
+    info(`Server listening on 8000`);
+    handleInput(inputHandler, "you");
+});
+
+/* Application Logic */
+function inputHandler(inp) {
+    broadcast(`${inp}`);
+}
+
+function broadcast(msg) {
+    for (let i in pool) {
+        pool[i].write(`${msg}`);
+    }
+}
