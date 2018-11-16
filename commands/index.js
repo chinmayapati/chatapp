@@ -15,9 +15,14 @@ function exec(sock, cmd) {
 
 function serverExec(cmd) {
     let parsed = cmd.substr(1).toLowerCase().split(' ');
+    let msg = parsed.slice(2).join(" ");
+    let start = msg[0] == '"' || msg[0] == "'" ? 1 : 0;
+    let end = msg[msg.length-1] == '"' || msg[msg.length-1] == "'" ? msg.length-2 : msg.length-1;
+    msg = msg.substr(start, end);
+
     switch (parsed[0]) {
         case "kick":
-            kickUser(parsed[1], parsed[2]);
+            kickUser(parsed[1], msg);
 			break;
 		case "clear":
 			clearConsole();
