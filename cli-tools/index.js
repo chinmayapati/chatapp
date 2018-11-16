@@ -1,10 +1,13 @@
 const readline = require("readline");
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false
-});
+const rl = readline.createInterface(process.stdin, process.stdout, completer);
+
+function completer(line) {
+    const completions = '$kick $connect $disconnect $list $search $clear'.split(' ')
+    var hits = completions.filter(c => c.indexOf(line) == 0)
+    // show all completions if none found
+    return [hits.length ? hits : completions, line]
+}
 
 exports.log = (msg, user) => process.stdout.write(`\r${msg}\n\n> ${user ? '(' + user + ') ' : ''}`);
 exports.info = msg => process.stdout.write(`\r${msg}\n`);
