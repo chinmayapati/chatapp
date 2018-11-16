@@ -4,6 +4,7 @@ const net = require("net");
 
 const server = net.createServer();
 global.pool = {};
+global.connectedUser = null;
 
 server.on("connection", socket => {
     socket.name = `${socket.remoteAddress}:${socket.remotePort}`;
