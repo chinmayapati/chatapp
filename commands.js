@@ -1,5 +1,5 @@
 const { send } = require("./communication");
-const { clearConsole } = require("./cli-tools");
+const { clearConsole, log } = require("./cli-tools");
 
 // Change `name` in `pool` : not in `socket`
 function addName(sock, name) {

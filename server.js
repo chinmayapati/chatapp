@@ -22,10 +22,6 @@ server.on("connection", socket => {
         log(`Connection dropped ${socket.name}`);
         delete pool[socket.name];
     });
-    socket.on("close", () => {
-        log(`Connection closed ${socket.name}`);
-        delete pool[socket.name];
-    });
     socket.on("error", e => {
         log(`SocketError [${socket.name}] : ${e.message}`);
         socket.destroy();
