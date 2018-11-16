@@ -6,8 +6,8 @@ const rl = readline.createInterface({
     terminal: false
 });
 
-exports.log = a => process.stdout.write(`\r${a}\n\n> `);
-exports.info = a => process.stdout.write(`\r${a}\n`);
+exports.log = (msg, user) => process.stdout.write(`\r${msg}\n\n> ${user ? '(' + user + ') ' : ''}`);
+exports.info = msg => process.stdout.write(`\r${msg}\n`);
 
 exports.getInput = msg => {
     return new Promise((resolve) => {
@@ -19,17 +19,18 @@ exports.getInput = msg => {
     });
 }
 
-exports.handleInput = (handle, name) => {
+exports.handleInput = (handle) => {
     process.stdout.write(`\n> `);
     rl.on("line", l => {
+        // ENTER pressed
         if(isNaN(l.charCodeAt(0))) {
             readline.moveCursor(process.stdout, 0, -1);
             readline.clearLine(process.stdout, 1);
-            process.stdout.write("> ");
+            this.log('', global.connectedUser);
             return;
         }
         readline.moveCursor(process.stdout, 0, -1);
-        this.log(`[you]: ${l}`);
+        this.log(`[you]: ${l}`, global.connectedUser);
         handle(l);
     });
 }
@@ -37,9 +38,7 @@ exports.handleInput = (handle, name) => {
 exports.clearConsole = () => {
     readline.cursorTo(process.stdout, 0, 0);
     readline.clearScreenDown(process.stdout);
-    process.stdout.write("> ");
+    this.log('', global.connectedUser);
 }
 
-exports.closeHandle = () => {
-    rl.close();
-}
+exports.closeHandle = () => rl.close();
