@@ -4,9 +4,9 @@ const rl = readline.createInterface(process.stdin, process.stdout, completer);
 
 function completer(line) {
     const completions = '$kick $connect $disconnect $list $search $clear'.split(' ')
-    var hits = completions.filter(c => c.indexOf(line) == 0)
+    const hits = completions.filter(c => c.indexOf(line) == 0);
     // show all completions if none found
-    return [hits.length ? hits : completions, line]
+    return [hits.length ? hits : [], line]
 }
 
 exports.log = (msg, user) => process.stdout.write(`\r${msg}\n\n> ${user ? '(' + user + ') ' : ''}`);

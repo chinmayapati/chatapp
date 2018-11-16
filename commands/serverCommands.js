@@ -3,11 +3,12 @@ const { log } = require("../cli-tools");
 function connectTo(user) {
 	connectedUser = user && pool[user] && pool[user].writable ? user : null;
 	if(connectedUser) log(`Connected to user ${connectedUser}`, connectedUser);
-	else log(`Unable to create secure channel for user ${user}`)
+	else log(`Unable to create secure channel for user '${user}'`);
 }
 
 function disconnect() {
-	log(`Disconnected from ${connectedUser}`);
+	if(connectedUser) log(`Disconnected from ${connectedUser}`);
+	else log(`Not connected to any user.`);
 	connectedUser = null;
 }
 
