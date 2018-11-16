@@ -25,8 +25,8 @@ exports.handleInput = (handle) => {
         // ENTER pressed
         if(isNaN(l.charCodeAt(0))) {
             readline.moveCursor(process.stdout, 0, -1);
-            readline.clearLine(process.stdout, 1);
-            this.log('', global.connectedUser);
+            readline.clearScreenDown(process.stdout);
+            process.stdout.write(`> ${global.connectedUser ? '('+global.connectedUser+') ' : '' }`);
             return;
         }
         readline.moveCursor(process.stdout, 0, -1);
